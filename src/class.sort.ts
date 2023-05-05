@@ -32,14 +32,23 @@ export class SortObject {
             }
         }, arr);
 
-        return arr.sort(this.useCompare === true ? this.sortByCompareTypes : undefined);
+        return arr.sort(this.useCompare === true ? (a, b): number => {
+            return this.sortByCompareTypes(a, b);
+        } : undefined);
     }
 
     private recursiveObjectSort(obj: any): object {
         return Object.keys(obj)
             .sort()
             .reduce((accumulator: any, key: any) => {
-                accumulator[key] = (Array.isArray(obj[key])) ? this.recursiveArraySort(obj[key]) : obj[key];
+                let it = obj[key];
+
+                if (Array.isArray(it))
+                    it = this.recursiveArraySort(it);
+                else if (typeof it === 'object')
+                    it = this.recursiveObjectSort(it);
+
+                accumulator[key] = it;
 
                 return accumulator;
             }, {});

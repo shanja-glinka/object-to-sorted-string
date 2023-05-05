@@ -10,15 +10,17 @@ export function DataToSortedString(data: any, useCompare = false): string {
 
 export function RecursiveArraySort(arr: Array<any>, useCompare = false): Array<any> {
     arr.forEach((el: any, index: number, arrPointer: Array<any>) => {
+
         if (Array.isArray(el)) {
             arrPointer[index] = RecursiveArraySort(el, useCompare);
             return;
         }
 
-        if (typeof el == 'object') {
+        if (typeof el === 'object') {
             arrPointer[index] = RecursiveObjectSort(el, useCompare);
             return;
         }
+
     }, arr);
     return arr.sort(useCompare === true ? SortByCompareTypes : undefined);
 }
@@ -27,7 +29,14 @@ export function RecursiveObjectSort(obj: any, useCompare = false): object {
     return Object.keys(obj)
         .sort()
         .reduce((accumulator: any, key: any) => {
-            accumulator[key] = (Array.isArray(obj[key])) ? RecursiveArraySort(obj[key], useCompare) : obj[key];
+            let it = obj[key];
+
+            if (Array.isArray(it))
+                it = RecursiveArraySort(it, useCompare);
+            else if (typeof it == 'object')
+                it = RecursiveObjectSort(it, useCompare);
+
+            accumulator[key] = it;
 
             return accumulator;
         }, {});
@@ -52,8 +61,9 @@ export function SortByCompareTypes(leftArg: any, rightArg: any): any {
         }
     }
 
+
     if (typeLeftArg === 'object')
         return -1;
-        
+
     return 0;
 }
