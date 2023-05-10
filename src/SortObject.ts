@@ -6,7 +6,17 @@ export class SortObject {
         this.useCompare = (useCompare === true);
     }
 
-    public sort(data: object): object {
+    public sort(data: any): object {
+        if (Array.isArray(data))
+            return this.sortArray(data);
+
+        if (typeof data !== 'object')
+            throw ('\'data\' must be an Array or Object \'' + (typeof data) + '\' given');
+            
+        return this.recursiveObjectSort(data);
+    }
+
+    public sortObject(data: object): object {
         return this.recursiveObjectSort(data);
     }
 
@@ -55,8 +65,8 @@ export class SortObject {
     }
 
     private sortByCompareTypes(leftArg: any, rightArg: any): any {
-        let typeLeftArg = typeof leftArg;
-        let typeRightArg = typeof rightArg;
+        const typeLeftArg = typeof leftArg;
+        const typeRightArg = typeof rightArg;
 
         if (typeLeftArg === 'number') {
             if (typeRightArg === 'number')

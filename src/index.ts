@@ -1,5 +1,5 @@
 import { DataToSortedString } from './sort';
-import { SortObject } from './class.sort';
+import { SortObject } from './SortObject';
 
 
 console.log('--------OBJ-DEEP-------');
